@@ -1,0 +1,456 @@
+/* ── Reset & Base ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── CSS Variables ── */
+:root {
+  --bg-page: #edeef0;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fdfdfd;
+  --bg-input: #f9fafb;
+
+  --text-primary: #0f1117;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+
+  --border: #e5e7eb;
+  --border-focus: #2563eb;
+
+  --blue: #2563eb;
+  --blue-bg: #eff6ff;
+
+  --red: #dc2626;
+  --red-bg: #fef2f2;
+  --red-soft: #fee2e2;
+
+  --amber: #d97706;
+  --amber-bg: #fffbeb;
+
+  --green: #059669;
+  --green-bg: #ecfdf5;
+
+  --purple: #7c3aed;
+  --purple-bg: #f5f3ff;
+
+  --radius-card: 20px;
+  --radius-badge: 20px;
+  --radius-btn: 8px;
+  --radius-tag: 20px;
+
+  --shadow-card:
+    0 1px 3px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08),
+    0 24px 56px rgba(0, 0, 0, 0.05);
+  --shadow-card-hover:
+    0 2px 6px rgba(0, 0, 0, 0.07), 0 16px 40px rgba(0, 0, 0, 0.11),
+    0 32px 72px rgba(0, 0, 0, 0.07);
+
+  --transition: 0.18s ease;
+}
+
+/* ── Screen-reader only utility ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Page ── */
+body {
+  font-family: "DM Sans", system-ui, sans-serif;
+  background: var(--bg-page);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  width: 100%;
+  max-width: 500px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Done state */
+.card--done {
+  opacity: 0.72;
+}
+.card--done .card__title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* ── Card Header ── */
+.card__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 22px 0;
+}
+
+/* Checkbox */
+.card__checkbox-wrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+input[type="checkbox"][data-testid="test-todo-complete-toggle"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition:
+    border-color var(--transition),
+    background var(--transition);
+  background: var(--bg-input);
+}
+
+input[type="checkbox"][data-testid="test-todo-complete-toggle"]:hover {
+  border-color: #9ca3af;
+}
+
+input[type="checkbox"][data-testid="test-todo-complete-toggle"]:checked {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+input[type="checkbox"][data-testid="test-todo-complete-toggle"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 8px;
+  height: 12px;
+  border: 2px solid #ffffff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+input[type="checkbox"][data-testid="test-todo-complete-toggle"]:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 3px;
+}
+
+/* Badges */
+.card__badges {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: "DM Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: var(--radius-badge);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Priority variants */
+.badge--high {
+  background: var(--red-soft);
+  color: var(--red);
+}
+.badge--medium {
+  background: var(--amber-bg);
+  color: var(--amber);
+}
+.badge--low {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+/* Status badge */
+.badge--status {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.badge__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--blue);
+  flex-shrink: 0;
+  transition: background var(--transition);
+}
+
+/* When done, dot turns green */
+.card--done .badge__dot {
+  background: var(--green);
+}
+
+/* Action buttons */
+.card__actions {
+  display: flex;
+  gap: 3px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.icon-btn:hover {
+  background: #f3f4f6;
+  color: var(--text-primary);
+}
+
+.icon-btn:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.icon-btn--danger:hover {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+/* ── Card Body ── */
+.card__body {
+  padding: 14px 22px 0;
+}
+
+.card__title {
+  font-size: clamp(18px, 4vw, 22px);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  letter-spacing: -0.3px;
+  transition:
+    color var(--transition),
+    text-decoration var(--transition);
+  word-break: break-word;
+}
+
+.card__description {
+  margin-top: 9px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  word-break: break-word;
+}
+
+/* ── Card Meta ── */
+.card__meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+  padding: 18px 22px;
+  border-top: 1px solid var(--border);
+  margin-top: 18px;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.meta-label {
+  font-family: "DM Mono", monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.meta-value {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.meta-value svg {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Urgency color states */
+.meta-value--urgency {
+  color: var(--amber);
+}
+.meta-value--urgency svg {
+  color: var(--amber);
+}
+
+.meta-value--urgency.urgency-overdue {
+  color: var(--red);
+}
+.meta-value--urgency.urgency-overdue svg {
+  color: var(--red);
+}
+
+.meta-value--urgency.urgency-today {
+  color: var(--purple);
+}
+.meta-value--urgency.urgency-today svg {
+  color: var(--purple);
+}
+
+.meta-value--urgency.urgency-done {
+  color: var(--green);
+}
+.meta-value--urgency.urgency-done svg {
+  color: var(--green);
+}
+
+/* ── Card Footer / Tags ── */
+.card__footer {
+  padding: 0 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tags li {
+  display: contents;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  background: #f3f4f6;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-tag);
+  padding: 4px 12px;
+  cursor: default;
+  transition:
+    background var(--transition),
+    border-color var(--transition);
+  white-space: nowrap;
+}
+
+.tag:hover {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  body {
+    padding: 16px 12px;
+    align-items: flex-start;
+  }
+
+  .card {
+    border-radius: 16px;
+    max-width: 100%;
+  }
+
+  .card__header {
+    padding: 16px 16px 0;
+    flex-wrap: wrap;
+  }
+
+  .card__badges {
+    order: 2;
+    flex-basis: 100%;
+  }
+
+  .card__actions {
+    order: 1;
+    margin-left: auto;
+  }
+
+  .card__body {
+    padding: 12px 16px 0;
+  }
+
+  .card__meta {
+    padding: 14px 16px;
+    margin-top: 14px;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .card__footer {
+    padding: 0 16px 18px;
+  }
+
+  .meta-value {
+    white-space: normal;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .card {
+    max-width: 460px;
+  }
+}
