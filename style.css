@@ -91,6 +91,7 @@ body {
   max-width: 500px;
   box-shadow: var(--shadow-card);
   overflow: hidden;
+  position: relative;
   transition:
     transform var(--transition),
     box-shadow var(--transition);
@@ -220,11 +221,6 @@ input[type="checkbox"][data-testid="test-todo-complete-toggle"]:focus-visible {
   background: var(--blue);
   flex-shrink: 0;
   transition: background var(--transition);
-}
-
-/* When done, dot turns green */
-.card--done .badge__dot {
-  background: var(--green);
 }
 
 /* Action buttons */
@@ -402,6 +398,248 @@ input[type="checkbox"][data-testid="test-todo-complete-toggle"]:focus-visible {
   border-color: #d1d5db;
 }
 
+/* ══════════════════════════════════════
+   NEW FEATURES
+══════════════════════════════════════ */
+
+/* Views */
+.card__view[hidden], .card__edit[hidden] {
+  display: none;
+}
+
+/* Priority bar */
+.priority-bar {
+  height: 4px;
+  width: 100%;
+  background: var(--red);
+  transition: background var(--transition);
+}
+.priority-bar.medium { background: var(--amber); }
+.priority-bar.low { background: var(--green); }
+.card--overdue .priority-bar { background: var(--red); }
+
+/* Status select */
+.status-select {
+  font-family: "DM Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 26px 4px 10px;
+  border-radius: var(--radius-badge);
+  border: 1.5px solid var(--border);
+  background: #f3f4f6
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")
+    no-repeat right 8px center;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  color: #374151;
+  transition:
+    border-color var(--transition),
+    background var(--transition);
+  white-space: nowrap;
+}
+.status-select:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+  border-color: var(--border-focus);
+}
+.status-select:hover {
+  border-color: #9ca3af;
+}
+.status-select.status--done {
+  background-color: var(--green-bg);
+  color: var(--green);
+  border-color: #a7f3d0;
+}
+.status-select.status--pending {
+  background-color: var(--amber-bg);
+  color: var(--amber);
+  border-color: #fde68a;
+}
+.status-select.status--progress {
+  background-color: var(--blue-bg);
+  color: var(--blue);
+  border-color: #bfdbfe;
+}
+
+/* Dots */
+.badge__dot.dot--pending { background: var(--amber); }
+.badge__dot.dot--done { background: var(--green); }
+
+/* Collapsible */
+.collapsible {
+  overflow: hidden;
+  transition: max-height 0.32s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+}
+.collapsible.is-collapsed {
+  max-height: 52px;
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+}
+.collapsible.is-expanded {
+  max-height: 600px;
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+/* Expand button */
+.expand-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue);
+  padding: 2px 0;
+  transition: color var(--transition);
+}
+.expand-btn:hover { color: #1d4ed8; }
+.expand-btn:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.expand-btn__icon { transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+.expand-btn.is-expanded .expand-btn__icon { transform: rotate(180deg); }
+
+/* Urgency / Overdue Badge */
+.urgency-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.overdue-badge {
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--red-bg);
+  color: var(--red);
+  padding: 2px 7px;
+  border-radius: var(--radius-badge);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Edit Form */
+.card__edit {
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.edit-heading {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 0;
+}
+.edit-label {
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.edit-input, .edit-textarea, .edit-select {
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  width: 100%;
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+  outline: none;
+}
+.edit-input:focus, .edit-textarea:focus, .edit-select:focus {
+  border-color: var(--border-focus);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+.edit-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+.edit-select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  cursor: pointer;
+}
+.edit-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+.btn {
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: var(--radius-btn);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), color var(--transition), box-shadow var(--transition);
+  white-space: nowrap;
+}
+.btn:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+.btn--ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+.btn--ghost:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+  color: var(--text-primary);
+}
+.btn--primary {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+.btn--primary:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.25);
+}
+
 /* ── Responsive ── */
 @media (max-width: 480px) {
   body {
@@ -446,6 +684,21 @@ input[type="checkbox"][data-testid="test-todo-complete-toggle"]:focus-visible {
 
   .meta-value {
     white-space: normal;
+  }
+  
+  /* Edit Form overrides */
+  .card__edit {
+    padding: 16px;
+  }
+  .edit-row {
+    grid-template-columns: 1fr;
+  }
+  .edit-actions {
+    flex-direction: column-reverse;
+  }
+  .btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 
